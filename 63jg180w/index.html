@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modora - subs4unlock</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/nxmn999/subs4unlock/refs/heads/main/1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --primary-action-color: #007bff;
+            --primary-action-color-dark: #0056b3;
+            --youtube-color: #ff0000;
+            --whatsapp-color: #2D97CB;
+            --bg-body: #f4f7f6;
+            --bg-card: rgba(255, 255, 255, 0.88);
+            --bg-switcher: #e9ecef;
+            --border-card: rgba(255, 255, 255, 0.7);
+            --text-dark: #2c3e50;
+            --text-light: #576574;
+            --shadow: 0 10px 40px rgba(44, 62, 80, 0.1);
+            --completed-color: #576574;
+        }
+        body.dark-mode {
+            --bg-body: #121212;
+            --bg-card: rgba(29, 29, 29, 0.88);
+            --bg-switcher: #2c2c2e;
+            --border-card: rgba(255, 255, 255, 0.1);
+            --text-dark: #e5e5e7;
+            --text-light: #9a9a9e;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --completed-color: #4a4a4c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; min-height: 100svh; background-color: var(--bg-body); transition: background-color 0.4s ease; display: flex; align-items: center; justify-content: center; }
+        .unlock-container { max-width: 420px; width: calc(100% - 2rem); margin: 2rem auto; background: var(--bg-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--border-card); box-shadow: var(--shadow); padding: 2.2rem 1.8rem; text-align: center; color: var(--text-dark); opacity: 0; animation: fadeInCard 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+        @keyframes fadeInCard { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeInChild { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .unlock-container > * { opacity: 0; animation: fadeInChild 0.5s ease-out forwards; }
+        .unlock-container .theme-switcher { animation-delay: 0.2s; }
+        .unlock-container .lang-switcher { animation-delay: 0.3s; }
+        .unlock-container h1 { animation-delay: 0.4s; }
+        .unlock-container p { animation-delay: 0.5s; }
+        .unlock-container .action-buttons { animation-delay: 0.6s; }
+        .unlock-container #unlockLink { animation-delay: 0.8s; }
+        .toggle-switcher { display: inline-flex; align-items: center; background-color: var(--bg-switcher); border-radius: 30px; padding: 4px; transition: background-color 0.4s ease; }
+        .theme-switcher { margin-bottom: 0.75rem; }
+        .lang-switcher { margin-bottom: 1.5rem; }
+        .toggle-switcher button { border: none; background: transparent; cursor: pointer; font-weight: 600; font-size: 0.85rem; padding: 7px 18px; border-radius: 25px; color: var(--text-light); -webkit-tap-highlight-color: transparent; outline: none; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .toggle-switcher button.active { background: var(--primary-action-color); color: #fff; box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25); }
+        .toggle-switcher i { font-size: 14px; }
+        h1 { font-size: clamp(1.7rem, 5vw, 2.1rem); margin-bottom: 0.5rem; font-weight: 700; transition: color 0.4s ease; }
+        p { font-size: clamp(0.95rem, 4vw, 1rem); margin-bottom: 1.5rem; line-height: 1.6; color: var(--text-light); transition: color 0.4s ease; }
+        .action-buttons { margin-bottom: 1.2rem; }
+        .action-buttons button { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 100%; padding: 14px; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); font-size: 1.05rem; font-weight: 600; color: var(--text-dark); text-decoration: none; gap: 12px; cursor: pointer; transition: all 0.3s ease; -webkit-tap-highlight-color: transparent; outline: none; }
+        .action-buttons button .fa-brands { font-size: 20px; width: 22px; text-align: center; }
+        #joinWaBtn .fa-brands { color: var(--whatsapp-color); }
+        .action-buttons button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.35); border-color: rgba(255, 255, 255, 0.5); transform: translateY(-2px); }
+        .action-buttons button:disabled { background: rgba(225, 225, 225, 0.15); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); color: var(--text-light); cursor: not-allowed; box-shadow: none; border-color: rgba(255, 255, 255, 0.1); }
+        .action-buttons button:disabled .fa-brands, .action-buttons button.completed .fa-brands { color: var(--text-light); }
+        .action-buttons button.completed { color: var(--text-light) !important; }
+        .action-buttons button:disabled:hover { transform: none; }
+        .ripple { position: absolute; border-radius: 50%; background: rgba(0, 0, 0, 0.15); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+        .loader { width: 20px; height: 20px; border: 4px solid var(--text-light); border-top-color: var(--text-dark); border-radius: 50%; animation: spin 1s linear infinite; position: absolute; opacity: 0; transition: opacity 0.3s ease; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        button.loading .loader { opacity: 1; }
+        button.loading .btn-content { opacity: 0; }
+        #unlockLink { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; padding: 1rem; border-radius: 16px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent; outline: none; position: relative; overflow: hidden; }
+        #unlockLink.locked { background-color: var(--bg-locked-content, rgba(0, 0, 0, 0.03)); border: 2px dashed var(--border-locked-content, rgba(44, 62, 80, 0.15)); cursor: not-allowed; }
+        #unlockLink.locked .icon, #unlockLink.locked .text { color: var(--text-light); transition: color 0.4s ease; }
+        #unlockLink.unlocked { background-color: var(--primary-action-color); border: none; color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25); }
+        #unlockLink.unlocked:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 123, 255, 0.35); }
+        #unlockLink.unlocked::after { content: ''; display: block; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.2); opacity: 0; transform: scale(0.8); border-radius: 16px; transition: transform 0.15s ease-out, opacity 0.15s ease-out; }
+        #unlockLink.unlocked:active::after { transform: scale(0.95); opacity: 1; }
+        #unlockLink.unlocked:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3); }
+        #unlockLink .icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+        #unlockLink .text { font-weight: 600; font-size: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="unlock-container">
+        <div class="theme-switcher toggle-switcher">
+            <button id="theme-light"><i class="fa-solid fa-sun"></i></button>
+            <button id="theme-dark"><i class="fa-solid fa-moon"></i></button>
+        </div>
+        <div class="lang-switcher toggle-switcher">
+            <button id="lang-id" data-lang="id">Indonesia</button>
+            <button id="lang-en" data-lang="en">English</button>
+        </div>
+        <h1 data-lang-id="Konten Terkunci!" data-lang-en="Content Locked!">Konten Terkunci!</h1>
+        <p data-lang-id="Selesaikan langkah di bawah ini." data-lang-en="Complete the step below.">Selesaikan langkah di bawah ini.</p>
+        <div class="action-buttons">
+            <button id="joinWaBtn">
+                <div class="loader"></div>
+                <div class="btn-content" style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fa-brands fa-telegram-plane"></i>
+                    <span data-lang-id="Gabung Channel" data-lang-en="Join Channel">Gabung Channel</span>
+                </div>
+            </button>
+        </div>
+        <div id="unlockLink" class="locked">
+            <div class="icon"><i id="unlockIcon" class="fa-solid fa-lock"></i></div>
+            <span class="text" data-lang-id="Tautan Anda Terkunci" data-lang-en="Your Link is Locked">Tautan Anda Terkunci</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const WHATSAPP_CHANNEL_URL = "https://t.me/modoraofficial";
+            const TARGET_URL = "https://modora.my.id/mods/loktv-mod-apk-v1.4.0-premium-terbuka/";
+            const translatableElements = document.querySelectorAll('[data-lang-id]');
+            const langIdBtn = document.getElementById('lang-id');
+            const langEnBtn = document.getElementById('lang-en');
+            const joinWaBtn = document.getElementById('joinWaBtn');
+            const unlockLink = document.getElementById('unlockLink');
+            const themeLightBtn = document.getElementById('theme-light');
+            const themeDarkBtn = document.getElementById('theme-dark');
+            const actionButtons = document.querySelectorAll('.action-buttons button');
+            const state = { joinedWa: false, currentLang: 'id' };
+
+            const setTheme = (theme) => {
+                document.body.classList.toggle('dark-mode', theme === 'dark');
+                themeDarkBtn.classList.toggle('active', theme === 'dark');
+                themeLightBtn.classList.toggle('active', theme !== 'dark');
+                localStorage.setItem('theme', theme);
+            };
+            themeLightBtn.addEventListener('click', () => setTheme('light'));
+            themeDarkBtn.addEventListener('click', () => setTheme('dark'));
+            setTheme(localStorage.getItem('theme') || 'light');
+
+            const setLanguage = (lang) => {
+                state.currentLang = lang;
+                translatableElements.forEach(el => {
+                    const key = lang === 'id' ? 'langId' : 'langEn';
+                    if (el.dataset[key]) el.textContent = el.dataset[key];
+                });
+                langIdBtn.classList.toggle('active', lang === 'id');
+                langEnBtn.classList.toggle('active', lang === 'en');
+                document.querySelectorAll('.completed .btn-content span').forEach(span => {
+                    const textNode = span.childNodes[1];
+                    if (textNode) textNode.nodeValue = (lang === 'id' ? ' Selesai' : ' Completed');
+                });
+                if (unlockLink.classList.contains('unlocked')) {
+                    unlockLink.querySelector('.text').textContent = (lang === 'id' ? 'Buka Tautan' : 'Go to Link');
+                }
+            };
+            langIdBtn.addEventListener('click', () => setLanguage('id'));
+            langEnBtn.addEventListener('click', () => setLanguage('en'));
+            setLanguage('id');
+
+            const createRipple = (event) => {
+                const button = event.currentTarget;
+                const circle = document.createElement("span");
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - (button.getBoundingClientRect().left + radius)}px`;
+                circle.style.top = `${event.clientY - (button.getBoundingClientRect().top + radius)}px`;
+                circle.classList.add("ripple");
+                const ripple = button.getElementsByClassName("ripple")[0];
+                if (ripple) { ripple.remove(); }
+                button.appendChild(circle);
+            };
+            actionButtons.forEach(button => button.addEventListener("click", createRipple));
+
+            let isLinkHandlerSet = false;
+            const checkCompletion = () => {
+                if (state.joinedWa) {
+                    unlockLink.classList.remove('locked');
+                    unlockLink.classList.add('unlocked');
+                    const unlockText = unlockLink.querySelector('.text');
+                    const unlockIcon = document.getElementById('unlockIcon');
+                    unlockText.textContent = (state.currentLang === 'id' ? 'Buka Tautan' : 'Go to Link');
+                    unlockIcon.className = "fa-solid fa-arrow-up-right-from-square";
+                    if (!isLinkHandlerSet) {
+                        unlockLink.addEventListener('click', () => {
+                            window.open(TARGET_URL, '_blank');
+                        });
+                        isLinkHandlerSet = true;
+                    }
+                }
+            };
+            
+            const handleAction = (button, url, stateKey) => {
+                if (state[stateKey] || button.classList.contains('loading')) return;
+                button.classList.add('loading');
+                button.disabled = true;
+                window.open(url, '_blank');
+                setTimeout(() => {
+                    state[stateKey] = true;
+                    button.classList.remove('loading');
+                    button.classList.add('completed');
+                    const textSpan = button.querySelector('.btn-content span');
+                    if (textSpan) {
+                        const checkIcon = document.createElement('i');
+                        checkIcon.className = "fa-solid fa-check";
+                        textSpan.innerHTML = '';
+                        textSpan.appendChild(checkIcon);
+                        const completedText = document.createTextNode(state.currentLang === 'id' ? ' Selesai' : ' Completed');
+                        textSpan.appendChild(completedText);
+                    }
+                    checkCompletion();
+                }, 5000);
+            };
+            joinWaBtn.addEventListener('click', (e) => handleAction(joinWaBtn, WHATSAPP_CHANNEL_URL, 'joinedWa'));
+        });
+    </script>
+</body>
+</html>
